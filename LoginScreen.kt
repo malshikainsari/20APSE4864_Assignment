@@ -7,6 +7,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.assignment.data.UserDao
 import kotlinx.coroutines.launch
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun LoginScreen(
@@ -22,35 +26,44 @@ fun LoginScreen(
     val scope = rememberCoroutineScope()
 
     Column(
-        modifier = Modifier.padding(20.dp)
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
 
-        Text("Login")
+        Text(
+            text = "Login",
+            fontSize = 30.sp,
+            fontWeight = FontWeight.Bold
+        )
 
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(25.dp))
 
-        TextField(
+        OutlinedTextField(
             value = username,
             onValueChange = { username = it },
-            label = { Text("Username") }
+            label = { Text("Username") },
+            modifier = Modifier.fillMaxWidth()
         )
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        TextField(
+        OutlinedTextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text("Password") }
+            label = { Text("Password") },
+            visualTransformation = PasswordVisualTransformation(),
+            modifier = Modifier.fillMaxWidth()
         )
 
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
         Button(
             onClick = {
                 scope.launch {
-
-                    val user =
-                        userDao.login(username, password)
+                    val user = userDao.login(username, password)
 
                     if (user != null) {
                         onLoginSuccess(username)
@@ -58,17 +71,24 @@ fun LoginScreen(
                         message = "Invalid Username or Password"
                     }
                 }
-            }
+            },
+            modifier = Modifier.fillMaxWidth()
         ) {
             Text("Login")
         }
 
-        Text(message)
+        Spacer(modifier = Modifier.height(10.dp))
+
+        Text(
+            text = message,
+            color = MaterialTheme.colorScheme.error
+        )
 
         TextButton(
             onClick = onRegisterClick
         ) {
-            Text("Register")
+            Text("Create New Account")
         }
+
     }
 }
