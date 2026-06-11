@@ -21,7 +21,7 @@ A simple Android application developed using **Jetpack Compose**, **Room Databas
 
 ## Project Structure
 
-```
+```text
 data/
 ├── AppDatabase.kt
 ├── User.kt
@@ -36,19 +36,13 @@ screens/
 └── HomeScreen.kt
 ```
 
-## Screenshots
+## Application Screens
 
-### Login Screen
-
-![Login Screen](screenshots/login.png)
-
-### Register Screen
-
-![Register Screen](screenshots/register.png)
-
-### Home Screen
-
-![Home Screen](screenshots/home.png)
+<p align="center">
+  <img src="screenshots/login.png" width="250"/>
+  <img src="screenshots/register.png" width="250"/>
+  <img src="screenshots/home.png" width="250"/>
+</p>
 
 ## Database Structure
 
@@ -63,24 +57,70 @@ screens/
 
 ## Functional Requirements
 
-### Registration
+### User Registration
 
 - Enter Username
 - Enter Email
 - Enter Password
-- Validate Inputs
-- Save User to Room Database
+- Validate Input Fields
+- Save User Data to Room Database
 - Navigate to Login Screen
 
-### Login
+### User Login
 
 - Enter Username
 - Enter Password
-- Verify Credentials
+- Verify Credentials Using Room Database
 - Navigate to Home Screen
 
-### Home
+### Home Screen
 
+- Display Welcome Message
 - Display Logged-in Username
-- Logout Option
+- Logout Functionality
+
+## Code Snippets
+
+### User Entity
+
+```kotlin
+@Entity(tableName = "users")
+data class User(
+
+    @PrimaryKey(autoGenerate = true)
+    val id:Int = 0,
+
+    val username:String,
+    val email:String,
+    val password:String
+)
+```
+
+### UserDao
+
+```kotlin
+@Dao
+interface UserDao {
+
+    @Insert
+    suspend fun insert(user: User)
+
+    @Query(
+        "SELECT * FROM users WHERE username = :username AND password = :password LIMIT 1"
+    )
+    suspend fun login(
+        username:String,
+        password:String
+    ): User?
+}
+```
+
+### Navigation
+
+```kotlin
+NavHost(
+    navController = navController,
+    startDestination = "login"
+)
+```
 
